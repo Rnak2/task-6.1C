@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application with Maven...'
+                sh 'mvn clean package'
+            }
+        }
+        stage('Unit and Integration Tests') {
+            steps {
+                echo 'Running unit tests with JUnit...'
+                sh 'mvn test'
+                echo 'Running integration tests with Selenium...'
+                // Integration testing commands
+            }
+        }
+        stage('Code Analysis') {
+            steps {
+                echo 'Analyzing code quality with SonarQube...'
+                sh 'mvn sonar:sonar'
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                echo 'Performing security scan with OWASP ZAP...'
+                // OWASP ZAP scanning commands
+            }
+        }
+        stage('Deploy to Staging') {
+            steps {
+                echo 'Deploying to staging environment on AWS EC2...'
+                sh 'ansible-playbook -i inventory/staging deploy_app.yml'
+            }
+        }
+        stage('Integration Tests on Staging') {
+            steps {
+                echo 'Running integration tests on staging environment...'
+                // Additional Selenium or Postman scripts
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo 'Deploying to production environment on AWS EC2...'
+                sh 'ansible-playbook -i inventory/production deploy_app.yml'
+            }
+        }
+    }
+}
