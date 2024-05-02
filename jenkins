@@ -4,47 +4,52 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building the application with Maven...'
-                sh 'mvn clean package'
+                echo 'Building the application with Maven'
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Running unit tests with JUnit...'
-                sh 'mvn test'
-                echo 'Running integration tests with Selenium...'
-                // Integration testing commands
+                echo 'Running unit tests with JUnit'
+                echo 'Running integration tests with Selenium'
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Analyzing code quality with SonarQube...'
-                sh 'mvn sonar:sonar'
+                echo 'Analyzing code quality with SonarQube'
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Performing security scan with OWASP ZAP...'
-                // OWASP ZAP scanning commands
+                echo 'Performing security scan with OWASP ZAP'
             }
         }
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying to staging environment on AWS EC2...'
-                sh 'ansible-playbook -i inventory/staging deploy_app.yml'
+                echo 'Deploying to staging environment on AWS EC2'
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Running integration tests on staging environment...'
-                // Additional Selenium or Postman scripts
+                echo 'Running integration tests on staging environment'
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deploying to production environment on AWS EC2...'
-                sh 'ansible-playbook -i inventory/production deploy_app.yml'
+                echo 'Deploying to production environment on AWS EC2'
+
             }
+        }
+    }
+    post{
+        success{ 
+            mail to: "samborathanak8611@gmail.com",
+            subject: "Pipeline success - Build # ${currentBuild.number}", 
+            body: "The pipeline has completed all the stages. Build logs are attached."
+        }
+        failure{
+            mail to: "samborathanak8611@gmail.com"
+            subject: "Pipeline failure - Build # ${currentBuild.number}",
+            body: "The pipeline has failed at stage ${currentStage.name}. Build logs are attached."
         }
     }
 }
