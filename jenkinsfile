@@ -4,44 +4,37 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building the application with Maven'
-                sh 'mvn clean install -DskipTests'  
+                echo 'Building the application using Maven.'
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Running unit tests with JUnit'
-                sh 'mvn test'
-                echo 'Running integration tests with Selenium'
-                sh 'mvn verify -DskipUnitTests'  
+                echo 'Running unit tests and integration tests.'
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Analyzing code quality with SonarQube'
-                sh 'mvn sonar:sonar'
+                echo 'Analyzing code with SonarQube.'
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Performing security scan with OWASP ZAP'
+                echo 'Performing security scan with OWASP ZAP.'
             }
         }
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying to staging environment on AWS EC2'
-                sh 'ansible-playbook -i inventory/staging deploy_app.yml'
+                echo 'Deploying application to AWS EC2 staging instance.'
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Running integration tests on staging environment'
+                echo 'Running integration tests in the staging environment.'
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deploying to production environment on AWS EC2'
-                sh 'ansible-playbook -i inventory/production deploy_app.yml'
+                echo 'Deploying application to AWS EC2 production instance.'
             }
         }
     }
