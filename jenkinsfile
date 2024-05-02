@@ -39,15 +39,16 @@ pipeline {
         }
     }
     post {
-        success { 
-            mail to: 'samborathanak8611@gmail.com',
-            subject: "Pipeline success - Build #${env.BUILD_NUMBER}", 
-            body: "The pipeline has completed all the stages successfully. Build logs are attached."
-        }
-        failure {
-            mail to: 'samborathanak8611@gmail.com',
-            subject: "Pipeline failure - Build #${env.BUILD_NUMBER}",
-            body: "The pipeline has failed at stage ${env.STAGE_NAME}. Build logs are attached."
+    always {
+        script {
+            try {
+                mail to: 'you@example.com',
+                     subject: "Pipeline Notification for ${env.JOB_NAME}",
+                     body: "Build #${env.BUILD_NUMBER} - Status: ${currentBuild.currentResult}\nCheck console output at: ${env.BUILD_URL}",
+                     attachLog: true
+            } catch (Exception e) {
+                echo "Failed to send email. Error: ${e.getMessage()}"
+            }
         }
     }
 }
